@@ -22,7 +22,7 @@ namespace ClasseConcordance.KlasModels
         public string Adresse { get; set; }
         public bool EstActif { get; set; }
         public string CodeEcole { get; set; }
-        public Guid Rowguid { get; set; }
+        //public Guid Rowguid { get; set; }
 
         public virtual ICollection<ParentsElefe> ParentsEleves { get; set; }
     }
