@@ -14,6 +14,6 @@ namespace ClasseConcordance.KlasModels
         public DateTime? DateCreation { get; set; }
         public bool? EstActif { get; set; }
         public string CodeEcole { get; set; }
-        //public Guid Rowguid { get; set; }
+        //
     }
 }

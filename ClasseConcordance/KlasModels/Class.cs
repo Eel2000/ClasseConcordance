@@ -21,7 +21,7 @@ namespace ClasseConcordance.KlasModels
         public int? SectionOption { get; set; }
         public bool? IsPrivate { get; set; }
         public string Owner { get; set; }
-        public Guid Rowguid { get; set; }
+        
         public string CodeClassStandard { get; set; }
 
         public virtual ICollection<Parcour> Parcours { get; set; }

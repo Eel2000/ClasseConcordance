@@ -13,6 +13,6 @@ namespace ClasseConcordance.KlasModels
         public string AttachedFileSize { get; set; }
         public bool IsActive { get; set; }
         public bool IsLesson { get; set; }
-        public Guid Rowguid { get; set; }
+        
     }
 }

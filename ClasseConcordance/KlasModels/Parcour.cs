@@ -14,7 +14,7 @@ namespace ClasseConcordance.KlasModels
         public DateTime DateAffectation { get; set; }
         public bool EstActif { get; set; }
         public string CodeEcole { get; set; }
-        //public Guid Rowguid { get; set; }
+        //
 
         public virtual Class CodeClasseNavigation { get; set; }
         public virtual Elefe CodeEleveNavigation { get; set; }

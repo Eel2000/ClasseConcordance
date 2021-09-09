@@ -25,7 +25,7 @@ namespace ClasseConcordance.KlasModels
         public string CodePeriode { get; set; }
         public int? Maxima { get; set; }
         public bool? EstPubliee { get; set; }
-        public Guid Rowguid { get; set; }
+        
 
         public virtual Cour CodeCoursNavigation { get; set; }
         public virtual PeriodeScolaire CodePeriodeNavigation { get; set; }

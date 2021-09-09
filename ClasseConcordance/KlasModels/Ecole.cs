@@ -17,6 +17,7 @@ namespace ClasseConcordance.KlasModels
         public string ProfilEcole { get; set; }
         public string Domaine { get; set; }
         public int? TypeEcole { get; set; }
-        public Guid Rowguid { get; set; }
+        
+        public string CodeStandard { get; set; }
     }
 }

@@ -12,6 +12,6 @@ namespace ClasseConcordance.KlasModels
         public int DiagramId { get; set; }
         public int? Version { get; set; }
         public byte[] Definition { get; set; }
-        public Guid Rowguid { get; set; }
+        
     }
 }

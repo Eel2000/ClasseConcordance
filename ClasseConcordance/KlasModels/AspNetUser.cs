@@ -35,7 +35,7 @@ namespace ClasseConcordance.KlasModels
         public string CodeParent { get; set; }
         public string CodeEleve { get; set; }
         public string CodeProfesseur { get; set; }
-        public Guid Rowguid { get; set; }
+        
 
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }

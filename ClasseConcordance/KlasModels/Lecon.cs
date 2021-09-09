@@ -17,6 +17,6 @@ namespace ClasseConcordance.KlasModels
         public string CodeCours { get; set; }
         public DateTime DerniereModification { get; set; }
         public bool EstPubliee { get; set; }
-        public Guid Rowguid { get; set; }
+        
     }
 }

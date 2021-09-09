@@ -9,6 +9,6 @@ namespace ClasseConcordance.KlasModels
     {
         public string Code { get; set; }
         public string Section1 { get; set; }
-        public Guid Rowguid { get; set; }
+        
     }
 }
