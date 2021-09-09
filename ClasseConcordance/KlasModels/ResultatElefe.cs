@@ -14,6 +14,6 @@ namespace ClasseConcordance.KlasModels
         public bool? EstActif { get; set; }
         public string Link { get; set; }
         public string CodeEleve { get; set; }
-        public Guid Rowguid { get; set; }
+        
     }
 }

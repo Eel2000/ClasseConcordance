@@ -17,7 +17,7 @@ namespace ClasseConcordance.KlasModels
         public bool? EstActif { get; set; }
         public string CodePeriode { get; set; }
         public string Commentaire { get; set; }
-        public Guid Rowguid { get; set; }
+        
 
         public virtual Cour CodeCoursNavigation { get; set; }
         public virtual Elefe CodeEleveNavigation { get; set; }

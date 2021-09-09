@@ -69,9 +69,6 @@ namespace ClasseConcordance.Contexts
                 entity.HasKey(e => e.Code)
                     .HasName("PK_ANNEE");
 
-                //entity.HasIndex(e => e.Rowguid, "MSmerge_index_2137058649")
-                //    .IsUnique();
-
                 entity.Property(e => e.Code)
                     .ValueGeneratedNever()
                     .HasColumnName("CODE");
@@ -99,38 +96,22 @@ namespace ClasseConcordance.Contexts
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("INITULE");
-
-                //entity.Property(e => e.Rowguid)
-                //    .HasColumnName("rowguid")
-                //    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<AspNetRole>(entity =>
             {
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_53575229")
-                    .IsUnique();
-
+   
                 entity.Property(e => e.Name).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedName).HasMaxLength(256);
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<AspNetRoleClaim>(entity =>
             {
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_21575115")
-                    .IsUnique();
-
                 entity.Property(e => e.RoleId)
                     .IsRequired()
                     .HasMaxLength(450);
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.AspNetRoleClaims)
@@ -139,9 +120,6 @@ namespace ClasseConcordance.Contexts
 
             modelBuilder.Entity<AspNetUser>(entity =>
             {
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_181575685")
-                    .IsUnique();
-
                 entity.Property(e => e.Actif)
                     .IsRequired()
                     .HasDefaultValueSql("(CONVERT([bit],(0),(0)))");
@@ -152,21 +130,11 @@ namespace ClasseConcordance.Contexts
 
                 entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
             modelBuilder.Entity<AspNetUserClaim>(entity =>
             {
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_85575343")
-                    .IsUnique();
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
@@ -181,16 +149,9 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_117575457")
-                    .IsUnique();
-
                 entity.Property(e => e.LoginProvider).HasMaxLength(128);
 
                 entity.Property(e => e.ProviderKey).HasMaxLength(128);
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
@@ -205,12 +166,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => new { e.UserId, e.RoleId });
 
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_149575571")
-                    .IsUnique();
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.AspNetUserRoles)
@@ -225,16 +180,10 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_213575799")
-                    .IsUnique();
 
                 entity.Property(e => e.LoginProvider).HasMaxLength(128);
 
                 entity.Property(e => e.Name).HasMaxLength(128);
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.AspNetUserTokens)
@@ -243,9 +192,6 @@ namespace ClasseConcordance.Contexts
 
             modelBuilder.Entity<AttachedFile>(entity =>
             {
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1269579561")
-                    .IsUnique();
-
                 entity.Property(e => e.AttachedFileSize)
                     .IsRequired()
                     .HasMaxLength(80);
@@ -257,19 +203,12 @@ namespace ClasseConcordance.Contexts
                 entity.Property(e => e.IdDocument)
                     .IsRequired()
                     .HasMaxLength(30);
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<Class>(entity =>
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_CLASSE");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1701581100")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -296,10 +235,6 @@ namespace ClasseConcordance.Contexts
 
                 entity.Property(e => e.Owner).HasMaxLength(30);
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.SectionOption).HasColumnName("SECTION_OPTION");
 
                 entity.Property(e => e.Virtualclass).HasColumnName("VIRTUALCLASS");
@@ -313,9 +248,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_COURS");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_277576027")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -340,10 +272,6 @@ namespace ClasseConcordance.Contexts
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("INTITULE_COURT");
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<CoursClasse>(entity =>
@@ -352,9 +280,6 @@ namespace ClasseConcordance.Contexts
                     .HasName("PK_COURS_CLASSE");
 
                 entity.ToTable("Cours_Classe");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_309576141")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -383,10 +308,6 @@ namespace ClasseConcordance.Contexts
 
                 entity.Property(e => e.EstActif).HasColumnName("EST_ACTIF");
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.HasOne(d => d.CodeCoursNavigation)
                     .WithMany(p => p.CoursClasses)
                     .HasForeignKey(d => d.CodeCours)
@@ -398,9 +319,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_ECOLE");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1877581727")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -437,10 +355,6 @@ namespace ClasseConcordance.Contexts
 
                 entity.Property(e => e.ProfilEcole).HasColumnName("PROFIL_ECOLE");
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.Telephone)
                     .IsRequired()
                     .HasMaxLength(30)
@@ -448,15 +362,14 @@ namespace ClasseConcordance.Contexts
                     .HasColumnName("TELEPHONE");
 
                 entity.Property(e => e.TypeEcole).HasColumnName("TYPE_ECOLE");
+
+                entity.Property(e => e.CodeStandard).HasColumnName("CODE_STANDARD");
             });
 
             modelBuilder.Entity<Elefe>(entity =>
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_ELEVE");
-
-                //entity.HasIndex(e => e.Rowguid, "MSmerge_index_373576369")
-                //    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -526,10 +439,6 @@ namespace ClasseConcordance.Contexts
                     .IsUnicode(false)
                     .HasColumnName("PRENOM");
 
-                //entity.Property(e => e.Rowguid)
-                //    .HasColumnName("rowguid")
-                //    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.SendSms).HasColumnName("SEND_SMS");
 
                 entity.Property(e => e.Sexe)
@@ -549,9 +458,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_EVALUATION");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1077578877")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -595,10 +501,6 @@ namespace ClasseConcordance.Contexts
                     .HasColumnName("INTITULE");
 
                 entity.Property(e => e.Maxima).HasColumnName("MAXIMA");
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.Property(e => e.TypeContenu)
                     .HasMaxLength(50)
@@ -660,9 +562,6 @@ namespace ClasseConcordance.Contexts
                 entity.HasKey(e => e.Code)
                     .HasName("PK_LECON");
 
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_437576597")
-                    .IsUnique();
-
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
                     .IsUnicode(false)
@@ -701,10 +600,6 @@ namespace ClasseConcordance.Contexts
                     .HasMaxLength(100)
                     .HasColumnName("INTITULE");
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.TypeContenu)
                     .HasMaxLength(50)
                     .IsUnicode(false)
@@ -715,9 +610,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_NOTE");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_469576711")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -759,10 +651,6 @@ namespace ClasseConcordance.Contexts
                     .HasColumnType("decimal(18, 2)")
                     .HasColumnName("NOTE_OBTENUE");
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.HasOne(d => d.CodeCoursNavigation)
                     .WithMany(p => p.Notes)
                     .HasForeignKey(d => d.CodeCours)
@@ -788,9 +676,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code);
 
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1365579903")
-                    .IsUnique();
-
                 entity.Property(e => e.Code)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -799,19 +684,12 @@ namespace ClasseConcordance.Contexts
                     .HasMaxLength(150)
                     .IsUnicode(false)
                     .HasColumnName("Option");
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<Parcour>(entity =>
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_PARCOURS");
-
-                //entity.HasIndex(e => e.Rowguid, "MSmerge_index_501576825")
-                //    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -844,10 +722,6 @@ namespace ClasseConcordance.Contexts
 
                 entity.Property(e => e.EstActif).HasColumnName("EST_ACTIF");
 
-                //entity.Property(e => e.Rowguid)
-                //    .HasColumnName("rowguid")
-                //    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.HasOne(d => d.CodeClasseNavigation)
                     .WithMany(p => p.Parcours)
                     .HasForeignKey(d => d.CodeClasse)
@@ -865,9 +739,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_PARENT");
-
-                //entity.HasIndex(e => e.Rowguid, "MSmerge_index_533576939")
-                //    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -907,10 +778,6 @@ namespace ClasseConcordance.Contexts
                     .IsUnicode(false)
                     .HasColumnName("PRENOM");
 
-                //entity.Property(e => e.Rowguid)
-                //    .HasColumnName("rowguid")
-                //    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.Sexe)
                     .HasMaxLength(20)
                     .IsUnicode(false)
@@ -929,9 +796,6 @@ namespace ClasseConcordance.Contexts
                     .HasName("PK_PARENT_ELEVE");
 
                 entity.ToTable("Parents_Eleves");
-
-                //entity.HasIndex(e => e.Rowguid, "MSmerge_index_565577053")
-                //    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -956,10 +820,6 @@ namespace ClasseConcordance.Contexts
                     .IsUnicode(false)
                     .HasColumnName("CODE_PARENT");
 
-                //entity.Property(e => e.Rowguid)
-                //    .HasColumnName("rowguid")
-                //    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.HasOne(d => d.CodeEleveNavigation)
                     .WithMany(p => p.ParentsEleves)
                     .HasForeignKey(d => d.CodeEleve)
@@ -977,9 +837,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_PERIODE_SCOLAIRE");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1813581499")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -1015,10 +872,6 @@ namespace ClasseConcordance.Contexts
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("INTITULE_COURT");
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<Presence>(entity =>
@@ -1055,9 +908,6 @@ namespace ClasseConcordance.Contexts
             {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_PROFESSEUR");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_629577281")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -1110,10 +960,6 @@ namespace ClasseConcordance.Contexts
                     .HasColumnName("PRENOM")
                     .IsFixedLength(true);
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.SendSms).HasColumnName("SEND_SMS");
 
                 entity.Property(e => e.Sexe)
@@ -1135,9 +981,6 @@ namespace ClasseConcordance.Contexts
                     .HasName("PK_PROFESSEUR_COURS");
 
                 entity.ToTable("Professeurs_Cours");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_661577395")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -1166,10 +1009,6 @@ namespace ClasseConcordance.Contexts
 
                 entity.Property(e => e.EstActif).HasColumnName("EST_ACTIF");
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.HasOne(d => d.CodeProfesseurNavigation)
                     .WithMany(p => p.ProfesseursCours)
                     .HasForeignKey(d => d.CodeProfesseur)
@@ -1179,9 +1018,6 @@ namespace ClasseConcordance.Contexts
             modelBuilder.Entity<Resultat>(entity =>
             {
                 entity.HasKey(e => e.Code);
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1749581271")
-                    .IsUnique();
 
                 entity.Property(e => e.CodeClasse)
                     .HasMaxLength(30)
@@ -1200,18 +1036,11 @@ namespace ClasseConcordance.Contexts
                 entity.Property(e => e.KeyResultat)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<ResultatElefe>(entity =>
             {
                 entity.HasKey(e => e.Code);
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1781581385")
-                    .IsUnique();
 
                 entity.Property(e => e.CodeEleve)
                     .HasMaxLength(30)
@@ -1220,24 +1049,13 @@ namespace ClasseConcordance.Contexts
                 entity.Property(e => e.Link)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<Section>(entity =>
             {
                 entity.HasKey(e => e.Code);
 
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1301579675")
-                    .IsUnique();
-
                 entity.Property(e => e.Code).HasMaxLength(30);
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.Property(e => e.Section1)
                     .HasMaxLength(150)
@@ -1247,9 +1065,6 @@ namespace ClasseConcordance.Contexts
             modelBuilder.Entity<SectionOption>(entity =>
             {
                 entity.HasKey(e => e.Code);
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1397580017")
-                    .IsUnique();
 
                 entity.Property(e => e.Code).HasColumnName("CODE");
 
@@ -1262,10 +1077,6 @@ namespace ClasseConcordance.Contexts
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("CODE_SECTION");
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
             });
 
             modelBuilder.Entity<SolutionEvaluation>(entity =>
@@ -1274,9 +1085,6 @@ namespace ClasseConcordance.Contexts
                     .HasName("PK_SOLUTION_EVALUATION");
 
                 entity.ToTable("Solution_Evaluations");
-
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_693577509")
-                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(30)
@@ -1311,10 +1119,6 @@ namespace ClasseConcordance.Contexts
                     .HasColumnType("datetime")
                     .HasColumnName("DATE_SOUMISSION");
 
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
-
                 entity.Property(e => e.TypeContenu)
                     .HasMaxLength(30)
                     .IsUnicode(false)
@@ -1340,9 +1144,6 @@ namespace ClasseConcordance.Contexts
 
                 entity.ToTable("sysdiagrams");
 
-                entity.HasIndex(e => e.Rowguid, "MSmerge_index_1445580188")
-                    .IsUnique();
-
                 entity.HasIndex(e => new { e.PrincipalId, e.Name }, "UK_principal_name")
                     .IsUnique();
 
@@ -1356,10 +1157,6 @@ namespace ClasseConcordance.Contexts
                     .HasColumnName("name");
 
                 entity.Property(e => e.PrincipalId).HasColumnName("principal_id");
-
-                entity.Property(e => e.Rowguid)
-                    .HasColumnName("rowguid")
-                    .HasDefaultValueSql("(newsequentialid())");
 
                 entity.Property(e => e.Version).HasColumnName("version");
             });

@@ -19,7 +19,7 @@ namespace ClasseConcordance.KlasModels
         public string IntituleCourt { get; set; }
         public int CodeAnneeScolaire { get; set; }
         public string CodeEcole { get; set; }
-        public Guid Rowguid { get; set; }
+        
 
         public virtual ICollection<CoursClasse> CoursClasses { get; set; }
         public virtual ICollection<Evaluation> Evaluations { get; set; }

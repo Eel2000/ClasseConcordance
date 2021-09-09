@@ -13,7 +13,7 @@ namespace ClasseConcordance.KlasModels
         public bool EstActif { get; set; }
         public int CodeAnneeScolaire { get; set; }
         public string CodeEcole { get; set; }
-        public Guid Rowguid { get; set; }
+        
 
         public virtual Cour CodeCoursNavigation { get; set; }
     }

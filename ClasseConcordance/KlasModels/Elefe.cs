@@ -32,7 +32,7 @@ namespace ClasseConcordance.KlasModels
         public bool? SendSms { get; set; }
         public string CodeAuth { get; set; }
         public string CodePwd { get; set; }
-        //public Guid Rowguid { get; set; }
+        //
 
         public virtual ICollection<Note> Notes { get; set; }
         public virtual ICollection<Parcour> Parcours { get; set; }
