@@ -28,24 +28,85 @@ namespace ClasseConcordance
                     //{
                     //    Console.WriteLine("{0}", item);
                     //}
-
-                    Console.WriteLine("\nStudent migration...\n");
-                    Worker.MergeClassesCodes("28963294960535598040566165793", "28337480073573483691160808906");
-                    Console.ReadLine();
+                    Console.WriteLine("Veuillez entrez les codeEcoles (1)klasroom et (2)standard separer par un point-virgule. veuillez respecter l'ordre de saisi svp.");
+                    var codes = (Console.ReadLine()).Split(';');
+                    if (codes.Count() is <= 0)
+                    {
+#pragma warning disable CA1416 // Validate platform compatibility
+                        Console.Beep(4, 6);
+#pragma warning restore CA1416 // Validate platform compatibility
+                        Environment.Exit(-1);
+                    }
+                    else if(codes.Where(x=>x == "" || x== null).Count() is >= 1)
+                    {
+                        Console.WriteLine("Donnees incorrect , sortie du programme.");
+#pragma warning disable CA1416 // Validate platform compatibility
+                        Console.Beep(40, 6);
+#pragma warning restore CA1416 // Validate platform compatibility
+                        Environment.Exit(-1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nStudent migration...\n");
+                        Worker.MergeClassesCodes(codes[0], codes[1]);
+                        Console.ReadLine();
+                    }
                 }
                 else if (key.Key == ConsoleKey.P)
                 {
-                    Console.WriteLine("\nParent migration...\n");
-                    Worker.MergeParent("28963294960535598040566165793", "28337480073573483691160808906");
-                    Console.WriteLine("Process finished...");
-                    Console.ReadLine();
+                    Console.WriteLine("Veuillez entrez les codeEcoles (1)klasroom et (2)standard separer par un point-virgule. veuillez respecter l'ordre de saisi svp.");
+                    var codes = (Console.ReadLine()).Split(';');
+                    if (codes.Count() is <= 0)
+                    {
+#pragma warning disable CA1416 // Validate platform compatibility
+                        Console.Beep(4, 6);
+#pragma warning restore CA1416 // Validate platform compatibility
+                        Environment.Exit(-1);
+
+                    }
+                    else if (codes.Where(x => x == "" || x == null).Count() is >= 1)
+                    {
+                        Console.WriteLine("Donnees incorrect , sortie du programme.");
+#pragma warning disable CA1416 // Validate platform compatibility
+                        Console.Beep(40, 6);
+#pragma warning restore CA1416 // Validate platform compatibility
+                        Environment.Exit(-1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nParent migration...\n");
+                        Worker.MergeParent("28963294960535598040566165793", "28337480073573483691160808906");
+                        Console.WriteLine("Process finished...");
+                        Console.ReadLine();
+                    }
                 }
                 else if (key.Key == ConsoleKey.A)
                 {
-                    Console.WriteLine("\n Sending sms with login info...\n");
-                    Worker.SendLoginInfoByclasse("28963294960535598040566165793");
-                    Console.WriteLine("process finished...");
-                    Console.ReadLine();
+                    Console.WriteLine("Veuillez entrez les codeEcoles (1)klasroom et (2)standard separer par un point-virgule. veuillez respecter l'ordre de saisi svp.");
+                    var codes = (Console.ReadLine()).Split(';');
+                    if (codes.Count() is <= 0)
+                    {
+#pragma warning disable CA1416 // Validate platform compatibility
+                        Console.Beep(4, 6);
+#pragma warning restore CA1416 // Validate platform compatibility
+                        Environment.Exit(-1);
+
+                    }
+                    else if (codes.Where(x => x == "" || x == null).Count() is >= 1)
+                    {
+                        Console.WriteLine("Donnees incorrect , sortie du programme.");
+#pragma warning disable CA1416 // Validate platform compatibility
+                        Console.Beep(40, 6);
+#pragma warning restore CA1416 // Validate platform compatibility
+                        Environment.Exit(-1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n Sending sms with login info...\n");
+                        Worker.SendLoginInfoByclasse("28963294960535598040566165793");
+                        Console.WriteLine("process finished...");
+                        Console.ReadLine();
+                    }
                 }
             } while (entrerKey.Key == ConsoleKey.Enter);
         }
