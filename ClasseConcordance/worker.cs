@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -56,7 +57,7 @@ namespace ClasseConcordance
                     students.Add(student);
                 }
 
-                var result = MergeOnKlasroom(students, codeEcoleKlas, classe.CodeAffectationLocalClass);
+                var result = MergeOnKlasroom(students, codeEcoleKlas, correspondanceKlas.Code);
                 Console.WriteLine("Nombre d'eleve pusher {0} pour la classe {1}", result, classe.Intitule);
             }
         }
@@ -150,6 +151,15 @@ namespace ClasseConcordance
                     Console.WriteLine("Nouveau Parent pusher");
                     Console.ForegroundColor = ConsoleColor.White;
 
+                    Console.WriteLine("envoi des informations de connexions au parent suivant en cours...");
+                    Task.Delay(5000);
+
+                    Console.WriteLine(Environment.NewLine);
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    SendCredentialsByStudent(tutor.Code, tutor.CodeEcole, codeEcoleStd);
+                    Console.WriteLine("informations de connexion envoyer.");
+                    Console.ForegroundColor = ConsoleColor.White;
+
                 }
                 catch (DbUpdateException e)
                 {
@@ -159,6 +169,8 @@ namespace ClasseConcordance
                     continue;
                 }
             }
+
+            Console.WriteLine("Precess finished...");
         }
 
         /// <summary>
@@ -218,8 +230,8 @@ namespace ClasseConcordance
                         Postnom = eleve.Postnom,
                         Prenom = eleve.Prenom,
                         Sexe = eleve.Sexe,
-                        DateInscription = (DateTime)eleve.DateInscription,
-                        DateNaissance = eleve.DateNaissance,
+                        DateInscription = DateTime.Now,
+                        DateNaissance = DateTime.Now,
                         CodeEcole = codeEcole,
                         EstActif = true,
                         LieuNaissance = "",
@@ -252,7 +264,7 @@ namespace ClasseConcordance
                 }
                 catch (DbUpdateException e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e);
                     continue;
                 }
             }
@@ -359,6 +371,67 @@ namespace ClasseConcordance
             }
         }
 
+        public static async void SendCredentialsByClasse(string klasEcoleCode, string klasCodeClasse)
+        {
+            var klasContext = new Klasroom_TestContext();
+
+            var classe = await klasContext.Classes.FirstOrDefaultAsync(x => x.CodeEcole == klasEcoleCode && x.Code == klasCodeClasse);
+            if (classe is null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine($"--> Classe not found {classe.Code}");
+                Console.ForegroundColor = ConsoleColor.White;
+                return;
+            }
+
+            var data = new
+            {
+                CodeClasse = classe.Code,
+                CodeEcole = classe.CodeEcole
+            };
+
+            PostAsync(data);
+        }
+
+        ///<summary>
+        ///Send student's klasroom login and password to the tutor.
+        ///</summary>
+        ///<param name="codeParent"> The klasroom tutor unique identifier.</param>
+        ///<param name="codeEcole">The klasroom school unique identifier.</param>
+        ///<param name="stdEcoleCode">The standard school unique identifier.</param>
+        ///<returns> True if its was sent otherwise false.</returns>
+        private static bool SendCredentialsByStudent(string codeParent, string codeEcole, string stdEcoleCode)
+        {
+            var klasContext = new Klasroom_TestContext();
+
+            var tutorChilds = klasContext.ParentsEleves.Where(x => x.CodeEcole == codeEcole && x.CodeParent == codeParent).ToList();
+            var tutor = klasContext.Parents.FirstOrDefault(x => x.CodeEcole == codeEcole && x.Code == codeParent);
+            if (tutor is null)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Echec d'envoir. Parent nom retrouver.");
+                Console.ForegroundColor = ConsoleColor.White;
+                return false;
+            }
+
+            foreach (var child in tutorChilds)
+            {
+                var student = klasContext.Eleves.FirstOrDefault(x => x.Code == child.CodeEleve && x.CodeEcole == child.CodeEcole);
+                if (!(child is null))
+                {
+                    //send credentials
+                    GetAsync(tutor.Telephone, stdEcoleCode);
+
+                    //the update the state of student's sendSms field
+                    student.SendSms = true;
+                    klasContext.Eleves.Update(student);
+                    klasContext.SaveChanges();
+                }
+            }
+
+            return true;
+        }
+
         private static string GenerateId() => PasswordGenerator.Generate(30, Sets.Digits);
         private static string GenerateId(int length) => PasswordGenerator.Generate(length, Sets.Digits);
         private static string GenerateId(int length, string type = Sets.Alphanumerics) => PasswordGenerator.Generate(length, type);
@@ -398,6 +471,49 @@ namespace ClasseConcordance
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine("The result of the sending request is {0}", result);
                     Console.ForegroundColor = ConsoleColor.White;
+
+                    Console.WriteLine(Environment.NewLine);
+                    Console.WriteLine("Process finished...");
+                    System.Diagnostics.Debug.Assert(false);
+                }
+                else if (httpRequest.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    var result = await httpRequest.Content.ReadAsStringAsync();
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("The result of the sending request is {0}\n the result is {1}", httpRequest.ReasonPhrase, result);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+
+        ///<summary>
+        ///make an http GET request to send student credentials to his tutor.
+        ///</summary>
+        ///<param name="phone">The tutor phone number.</param>
+        ///<param name="codeEcole">The sttandard codeEcole.</param>
+        private static async void GetAsync(string phone, string codeEcole)
+        {
+            var client = ConfigureHttp();
+            try
+            {
+                client.BaseAddress = new Uri(string.Format(Constants.URL_SEND_TO_ONE + $"/{phone}/{codeEcole}", string.Empty)); ;
+                var httpRequest = await client.GetAsync(client.BaseAddress);
+                if (httpRequest.IsSuccessStatusCode)
+                {
+                    var result = await httpRequest.Content.ReadAsStringAsync();
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    Console.WriteLine("The result of the sending request is {0}", result);
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                    Console.WriteLine(Environment.NewLine);
+                    Console.WriteLine("Process finished...");
                     System.Diagnostics.Debug.Assert(false);
                 }
                 else if (httpRequest.StatusCode == System.Net.HttpStatusCode.BadRequest)

@@ -37,7 +37,7 @@ namespace ClasseConcordance
 #pragma warning restore CA1416 // Validate platform compatibility
                         Environment.Exit(-1);
                     }
-                    else if(codes.Where(x=>x == "" || x== null).Count() is >= 1)
+                    else if (codes.Where(x => x == "" || x == null).Count() is >= 1)
                     {
                         Console.WriteLine("Donnees incorrect , sortie du programme.");
 #pragma warning disable CA1416 // Validate platform compatibility
@@ -75,14 +75,15 @@ namespace ClasseConcordance
                     else
                     {
                         Console.WriteLine("\nParent migration...\n");
-                        Worker.MergeParent("28963294960535598040566165793", "28337480073573483691160808906");
+                        Worker.MergeParent(codes[0], codes[1]);
                         Console.WriteLine("Process finished...");
                         Console.ReadLine();
                     }
                 }
                 else if (key.Key == ConsoleKey.A)
                 {
-                    Console.WriteLine("Veuillez entrez les codeEcoles (1)klasroom et (2)standard separer par un point-virgule. veuillez respecter l'ordre de saisi svp.");
+                    //Console.WriteLine("Veuillez entrez les codeEcoles (1)klasroom et (2)standard separer par un point-virgule. veuillez respecter l'ordre de saisi svp.");
+                    Console.WriteLine("Veuillez entrez lea codeEcoles (1)klasroom et (2)codeClasse klasroom separer par un point-virgule. veuillez respecter l'ordre de saisi svp.");
                     var codes = (Console.ReadLine()).Split(';');
                     if (codes.Count() is <= 0)
                     {
@@ -102,8 +103,18 @@ namespace ClasseConcordance
                     }
                     else
                     {
+                        //Console.ReadLine();
+                        //codes = Console.ReadLine().Split(';');
+                        //if (codes.Count() is <= 1)
+                        //{
+                        //    Console.ForegroundColor = ConsoleColor.DarkRed;
+                        //    Console.WriteLine("Vous n'avez saisi aucun code");
+                        //    Console.ForegroundColor = ConsoleColor.White;
+                        //    Environment.Exit(-1);
+                        //}
+
                         Console.WriteLine("\n Sending sms with login info...\n");
-                        Worker.SendLoginInfoByclasse("28963294960535598040566165793");
+                        Worker.SendCredentialsByClasse(codes[0], codes[1]);
                         Console.WriteLine("process finished...");
                         Console.ReadLine();
                     }
