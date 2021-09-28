@@ -25,6 +25,23 @@ namespace ClasseConcordance
 
             using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
+            var ecoleStd = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
+            var ecoleKlas = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
+            if (ecoleStd is null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.(KLASROOM)");
+                Console.ForegroundColor = ConsoleColor.White;
+                Environment.Exit(-1);
+            }
+            if (ecoleStd is null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.  (STANDARD)");
+                Console.ForegroundColor = ConsoleColor.White;
+                Environment.Exit(-1);
+            }
+
             var students = new List<InscriptionEleve>();
             foreach (var classe in classes)
             {
@@ -65,6 +82,24 @@ namespace ClasseConcordance
         {
             using var standardContext = new Eteyelo_system_ecmContext(Constants.stdConfigBuild.Options);
             using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
+
+            var ecoleStd = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
+            var ecoleKlas = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
+
+            if (ecoleStd is null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("[{DateTime.Now}]: Aucune ecole n'a ete trouvee.(KLASROOM)");
+                Console.ForegroundColor = ConsoleColor.White;
+                Environment.Exit(-1);
+            }
+            if (ecoleStd is null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.  (STANDARD)");
+                Console.ForegroundColor = ConsoleColor.White;
+                Environment.Exit(-1);
+            }
 
 
             var parents = standardContext.GlobalParents
@@ -401,7 +436,7 @@ namespace ClasseConcordance
         ///<returns> True if its was sent otherwise false.</returns>
         private static bool SendCredentialsByStudent(string codeParent, string codeEcole, string stdEcoleCode)
         {
-            var klasContext = new Klasroom_TestContext();
+            var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
             var tutorChilds = klasContext.ParentsEleves.Where(x => x.CodeEcole == codeEcole && x.CodeParent == codeParent).ToList();
             var tutor = klasContext.Parents.FirstOrDefault(x => x.CodeEcole == codeEcole && x.Code == codeParent);
@@ -415,8 +450,8 @@ namespace ClasseConcordance
 
             foreach (var child in tutorChilds)
             {
-                var student = klasContext.Eleves.FirstOrDefault(x => x.Code == child.CodeEleve && x.CodeEcole == child.CodeEcole);
-                if (!(child is null))
+                var student = klasContext.Eleves.FirstOrDefault(x => x.Code == child.CodeEleve && x.CodeEcole == child.CodeEcole && x.SendSms == false || x.SendSms == null);
+                if (student != null)
                 {
                     //send credentials
                     GetAsync(tutor.Telephone, stdEcoleCode);
@@ -502,7 +537,7 @@ namespace ClasseConcordance
             var client = ConfigureHttp();
             try
             {
-                client.BaseAddress = new Uri(string.Format(Constants.URL_SEND_TO_ONE + $"/{phone}/{codeEcole}", string.Empty)); ;
+                client.BaseAddress = new Uri(string.Format(Constants.URL_SEND_TO_ONE + $"{phone}/{codeEcole}", string.Empty)); ;
                 var httpRequest = await client.GetAsync(client.BaseAddress);
                 if (httpRequest.IsSuccessStatusCode)
                 {
