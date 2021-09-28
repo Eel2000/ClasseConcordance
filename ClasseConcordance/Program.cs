@@ -29,8 +29,10 @@ namespace ClasseConcordance
                 var codes = code?.Split(';');
                 if (codes?.Count() is <= 0)
                 {
+                    Console.WriteLine($"[{DateTime.Now}] : Donnees incorrect , sortie du programme.");
 #pragma warning disable CA1416 // Validate platform compatibility
                     Console.Beep(4, 6);
+                    Console.ReadLine();
 #pragma warning restore CA1416 // Validate platform compatibility
                     Environment.Exit(-1);
                 }
@@ -40,6 +42,7 @@ namespace ClasseConcordance
 #pragma warning disable CA1416 // Validate platform compatibility
                     Console.Beep(40, 6);
 #pragma warning restore CA1416 // Validate platform compatibility
+                    Console.ReadLine();
                     Environment.Exit(-1);
                 }
                 else
@@ -59,6 +62,8 @@ namespace ClasseConcordance
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine($"[{DateTime.Now}] : Configuration manquante");
                 Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Appuyez sur une touche pour quitter.");
+                Console.ReadLine();
                 Environment.Exit(-1);
             }
 
