@@ -18,7 +18,7 @@ namespace ClasseConcordance
 
             var code = await Configure();
 
-            Console.WriteLine("S => Migration des données vers klasroom.");
+            Console.WriteLine($"[{ DateTime.Now}] :  Migration des données vers klasroom.");
             await Task.Delay(5000);
             //var key = Console.ReadKey();
 
@@ -36,7 +36,7 @@ namespace ClasseConcordance
                 }
                 else if (codes.Where(x => x == "" || x == null).Count() is >= 1)
                 {
-                    Console.WriteLine("Donnees incorrect , sortie du programme.");
+                    Console.WriteLine($"[{DateTime.Now}] : Donnees incorrect , sortie du programme.");
 #pragma warning disable CA1416 // Validate platform compatibility
                     Console.Beep(40, 6);
 #pragma warning restore CA1416 // Validate platform compatibility
@@ -44,20 +44,20 @@ namespace ClasseConcordance
                 }
                 else
                 {
-                    Console.WriteLine("\nStudent migration...\n");
+                    Console.WriteLine($"[{DateTime.Now}] : Student migration...\n");
                     Worker.MergeClassesCodes(codes[0], codes[1]);
-                    Console.WriteLine("Process finished...");
+                    Console.WriteLine($"[{DateTime.Now}] : Process finished...");
                     //Console.ReadLine();
                     await Task.Delay(10000);
-                    Console.WriteLine("\nParent migration...\n");
+                    Console.WriteLine($"[{DateTime.Now}] : Parent migration...\n");
                     Worker.MergeParent(codes[0], codes[1]);
-                    Console.WriteLine("Process finished...");
+                    Console.WriteLine($"[{DateTime.Now}] : Process finished...");
                 }
             }
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("Configuration manquante");
+                Console.WriteLine($"[{DateTime.Now}] : Configuration manquante");
                 Console.ForegroundColor = ConsoleColor.White;
                 Environment.Exit(-1);
             }
@@ -73,7 +73,7 @@ namespace ClasseConcordance
         {
             try
             {
-                Console.WriteLine("Starting Application....");
+                Console.WriteLine($"[{DateTime.Now}] : Starting Application....");
 
                 await Task.Delay(5000);
 
@@ -82,7 +82,7 @@ namespace ClasseConcordance
                     .AddJsonFile("appsettings.json");
 
                 var configuration = builder.Build();
-                Console.WriteLine("Initializing configurations...");
+                Console.WriteLine($"[{DateTime.Now}] : Initializing configurations...");
 
 
                 var schools = configuration.GetSection("Schools").Value;
@@ -94,7 +94,7 @@ namespace ClasseConcordance
                 if (string.IsNullOrWhiteSpace(standarConnectionString))
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine("Configuration manquante");
+                    Console.WriteLine($"[{DateTime.Now}] : Configuration manquante");
                     Console.ForegroundColor = ConsoleColor.White;
                     Environment.Exit(-1);
                 }
@@ -102,7 +102,7 @@ namespace ClasseConcordance
                 if (string.IsNullOrWhiteSpace(klasroomConnectionString))
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine("Configuration manquante");
+                    Console.WriteLine($"[{DateTime.Now}] : Configuration manquante");
                     Console.ForegroundColor = ConsoleColor.White;
                     Environment.Exit(-1);
                 }
@@ -110,7 +110,7 @@ namespace ClasseConcordance
                 if (string.IsNullOrWhiteSpace(schools))
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine("Configuration manquante");
+                    Console.WriteLine($"[{DateTime.Now}] : Configuration manquante");
                     Console.ForegroundColor = ConsoleColor.White;
                     Environment.Exit(-1);
                 }
@@ -122,7 +122,7 @@ namespace ClasseConcordance
                 Constants.stdConfigBuild = stdContextBuilder;
                 Constants.klasConfingBuilder = klasroomContextBuilder;
 
-                Console.WriteLine("Initialization of configurations finished...");
+                Console.WriteLine($"[{DateTime.Now}] : Initialization of configurations finished...");
 
                 return schools;
             }
