@@ -55,8 +55,11 @@ namespace ClasseConcordance.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=5.189.167.38;Initial Catalog=Klasroom_Test;User ID=sa;Password=elo--@srvK11");
+                // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                //                 optionsBuilder.UseSqlServer("Data Source=5.189.167.38;Initial Catalog=Klasroom_Test;User ID=sa;Password=elo--@srvK11");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Configuration manquante.");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
@@ -100,7 +103,7 @@ namespace ClasseConcordance.Contexts
 
             modelBuilder.Entity<AspNetRole>(entity =>
             {
-   
+
                 entity.Property(e => e.Name).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedName).HasMaxLength(256);

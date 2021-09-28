@@ -153,7 +153,10 @@ namespace ClasseConcordance.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=5.189.167.38;Initial Catalog=eteyelo_system_ecm_2022;User ID=sa;Password=elo--@srvK11");
+                //optionsBuilder.UseSqlServer("Data Source=5.189.167.38;Initial Catalog=eteyelo_system_ecm_2022;User ID=sa;Password=elo--@srvK11");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Configuration manquante.");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
