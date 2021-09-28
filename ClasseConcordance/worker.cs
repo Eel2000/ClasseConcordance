@@ -17,13 +17,13 @@ namespace ClasseConcordance
     {
         public static void MergeClassesCodes(string codeEcoleKlas, string codeEcoleStd)
         {
-            using var standardContext = new Eteyelo_system_ecmContext();
+            using var standardContext = new Eteyelo_system_ecmContext(Constants.stdConfigBuild.Options);
             var classes = standardContext.GlobalAffectationLocalClasses
                 .Where(x => x.EloCodeEcole == codeEcoleStd)
                 .OrderBy(x => x.Intitule)
                 .ToList();
 
-            var klasContext = new Klasroom_TestContext();
+            using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
             var students = new List<InscriptionEleve>();
             foreach (var classe in classes)
@@ -63,8 +63,8 @@ namespace ClasseConcordance
 
         public static void MergeParent(string codeEcoleKlas, string codeEcoleStd)
         {
-            using var standardContext = new Eteyelo_system_ecmContext();
-            using var klasContext = new Klasroom_TestContext();
+            using var standardContext = new Eteyelo_system_ecmContext(Constants.stdConfigBuild.Options);
+            using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
 
             var parents = standardContext.GlobalParents
@@ -191,7 +191,7 @@ namespace ClasseConcordance
                 throw new ArgumentException("Cannot migrate because the classe of destination code is missing.");
             }
 
-            var klasContext = new Klasroom_TestContext();
+            using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
             var activeYear = klasContext.AnneeScolaires.FirstOrDefault(x => x.EstActif == true);
             if (activeYear is null)
