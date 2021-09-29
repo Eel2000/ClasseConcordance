@@ -191,7 +191,7 @@ namespace ClasseConcordance
                     Console.WriteLine(Environment.NewLine);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     SendCredentialsByStudent(tutor.Code, tutor.CodeEcole, codeEcoleStd);
-                    Console.WriteLine("informations de connexion envoyer.");
+                    //Console.WriteLine("informations de connexion envoyer.");
                     Console.ForegroundColor = ConsoleColor.White;
 
                 }
