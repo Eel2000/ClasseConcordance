@@ -86,6 +86,9 @@ namespace ClasseConcordance
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json");
 
+               // var dir = Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}appsettings")
+                
+
                 var configuration = builder.Build();
                 Console.WriteLine($"[{DateTime.Now}] : Initializing configurations...");
 

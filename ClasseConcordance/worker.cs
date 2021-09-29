@@ -438,6 +438,8 @@ namespace ClasseConcordance
         {
             var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
+            var ecole = klasContext.Ecoles.FirstOrDefault(x => x.Code == codeEcole);
+
             var tutorChilds = klasContext.ParentsEleves.Where(x => x.CodeEcole == codeEcole && x.CodeParent == codeParent).ToList();
             var tutor = klasContext.Parents.FirstOrDefault(x => x.CodeEcole == codeEcole && x.Code == codeParent);
             if (tutor is null)
@@ -453,8 +455,19 @@ namespace ClasseConcordance
                 var student = klasContext.Eleves.FirstOrDefault(x => x.Code == child.CodeEleve && x.CodeEcole == child.CodeEcole && x.SendSms == false || x.SendSms == null);
                 if (student != null)
                 {
+                    var data = new Notify
+                    {
+                        CodeEcole = stdEcoleCode,
+                        NomEcole = ecole.Nom,
+                        StudentName = $"{student.Nom} {student.Prenom}",
+                        Phone = tutor.Telephone,
+                        Usrname = student.CodeAuth,
+                        Pdw = student.CodePwd
+                    };
+
                     //send credentials
-                    GetAsync(tutor.Telephone, stdEcoleCode);
+                    PostAsync(data);
+                    //GetAsync(tutor.Telephone, stdEcoleCode);
 
                     //the update the state of student's sendSms field
                     student.SendSms = true;
@@ -480,7 +493,7 @@ namespace ClasseConcordance
             handler.ServerCertificateCustomValidationCallback = (s, c, t, d) => true;
 
             var httpClient = new HttpClient(handler);
-            httpClient.BaseAddress = new Uri(string.Format("https://napoche-apis.eteyelo.com/Sms/send-login-info", string.Empty));
+            httpClient.BaseAddress = new Uri(string.Format("https://napoche-apis.eteyelo.com/Sms/send-Id-sms", string.Empty));
             httpClient.Timeout = TimeSpan.FromSeconds(20);
 
             return httpClient;
@@ -503,7 +516,8 @@ namespace ClasseConcordance
                 {
                     var result = await httpRequest.Content.ReadAsStringAsync();
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    Console.WriteLine("The result of the sending request is {0}", result);
+                    //Console.WriteLine("The result of the sending request is {0}", result);
+                    Console.WriteLine($"[{DateTime.Now}]: Envoi des ids connexion klasroom terminer");
                     Console.ForegroundColor = ConsoleColor.White;
 
                     Console.WriteLine(Environment.NewLine);
