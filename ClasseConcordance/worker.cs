@@ -15,38 +15,41 @@ namespace ClasseConcordance
 {
     public static class Worker
     {
-        public static void MergeClassesCodes(string codeEcoleKlas, string codeEcoleStd)
+        public static async Task MergeClassesCodes(string codeEcoleKlas, string codeEcoleStd)
         {
             using var standardContext = new Eteyelo_system_ecmContext(Constants.stdConfigBuild.Options);
+            using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
+
+            var ecoleStd = await standardContext.GlobalEcoles.FirstOrDefaultAsync(x => x.EloCodeEcole == codeEcoleStd);
+            var ecoleKlas = await klasContext.Ecoles.FirstOrDefaultAsync(x => x.Code == codeEcoleKlas);
+            if (ecoleKlas is null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee. Veuillez verifier vos configurations et reessayez.(KLASROOM)");
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                Console.ForegroundColor = ConsoleColor.White;
+                Environment.Exit(-1);
+            }
+            if (ecoleStd is null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.Veuillez verifier vos configurations et reessayez.  (STANDARD)");
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                Console.ForegroundColor = ConsoleColor.White;
+                Environment.Exit(-1);
+            }
+
             var classes = standardContext.GlobalAffectationLocalClasses
                 .Where(x => x.EloCodeEcole == codeEcoleStd)
                 .OrderBy(x => x.Intitule)
                 .ToList();
 
-            using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
-
-            var ecoleStd = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
-            var ecoleKlas = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
-            if (ecoleStd is null)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.(KLASROOM)");
-                Console.ForegroundColor = ConsoleColor.White;
-                Environment.Exit(-1);
-            }
-            if (ecoleStd is null)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.  (STANDARD)");
-                Console.ForegroundColor = ConsoleColor.White;
-                Environment.Exit(-1);
-            }
 
             var students = new List<InscriptionEleve>();
             foreach (var classe in classes)
             {
-                var parcoursList = standardContext.InscriptionParcours.Where(x => x.CodeAffectationLocalClass == classe.CodeAffectationLocalClass && x.EstActif == true)
-                        .ToList();
+                var parcoursList = await standardContext.InscriptionParcours.Where(x => x.CodeAffectationLocalClass == classe.CodeAffectationLocalClass && x.EstActif == true)
+                        .ToListAsync();
 
                 if (parcoursList.Count is <= 0)
                 {
@@ -56,7 +59,7 @@ namespace ClasseConcordance
                     continue;
                 }
 
-                var correspondanceKlas = klasContext.Classes.FirstOrDefault(x => x.CodeClassStandard == classe.CodeAffectationLocalClass);
+                var correspondanceKlas = await klasContext.Classes.FirstOrDefaultAsync(x => x.CodeClassStandard == classe.CodeAffectationLocalClass);
                 if (correspondanceKlas is null)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -67,45 +70,47 @@ namespace ClasseConcordance
 
                 foreach (var parcours in parcoursList)
                 {
-                    var student = standardContext.InscriptionEleves.First(x => x.EloCodeEcole == parcours.EloCodeEcole &&
-                            x.EloCodeEleve == parcours.EloCodeEleve);
+                    var student = await standardContext.InscriptionEleves.FirstOrDefaultAsync(x => x.EloCodeEcole == parcours.EloCodeEcole &&
+                             x.EloCodeEleve == parcours.EloCodeEleve);
                     if (student is null) continue;
                     students.Add(student);
                 }
 
-                var result = MergeOnKlasroom(students, codeEcoleKlas, correspondanceKlas.Code);
+                var result = await MergeOnKlasroom(students, codeEcoleKlas, correspondanceKlas.Code);
                 Console.WriteLine("Nombre d'eleve pusher {0} pour la classe {1}", result, classe.Intitule);
             }
         }
 
-        public static void MergeParent(string codeEcoleKlas, string codeEcoleStd)
+        public static async Task MergeParent(string codeEcoleKlas, string codeEcoleStd)
         {
             using var standardContext = new Eteyelo_system_ecmContext(Constants.stdConfigBuild.Options);
             using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
-            var ecoleStd = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
-            var ecoleKlas = standardContext.GlobalEcoles.FirstOrDefault(x => x.EloCodeEcole == codeEcoleStd);
+            var ecoleStd = await standardContext.GlobalEcoles.FirstOrDefaultAsync(x => x.EloCodeEcole == codeEcoleStd);
+            var ecoleKlas = klasContext.Ecoles.FirstOrDefaultAsync(x => x.Code == codeEcoleKlas);
 
-            if (ecoleStd is null)
+            if (ecoleKlas is null)
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine("[{DateTime.Now}]: Aucune ecole n'a ete trouvee.(KLASROOM)");
+                Console.WriteLine("[{DateTime.Now}]: Aucune ecole n'a ete trouvee.Veuillez verifier vos configurations et reessayez.(KLASROOM)");
                 Console.ForegroundColor = ConsoleColor.White;
+                await Task.Delay(TimeSpan.FromSeconds(5));
                 Environment.Exit(-1);
             }
             if (ecoleStd is null)
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.  (STANDARD)");
+                Console.WriteLine($"[{DateTime.Now}]: Aucune ecole n'a ete trouvee.Veuillez verifier vos configurations et reessayez.  (STANDARD)");
                 Console.ForegroundColor = ConsoleColor.White;
+                await Task.Delay(TimeSpan.FromSeconds(5));
                 Environment.Exit(-1);
             }
 
 
-            var parents = standardContext.GlobalParents
+            var parents = await standardContext.GlobalParents
                 .Where(x => x.CodeEcole == codeEcoleStd && x.Actif == true)
                 .OrderBy(x => x.Nom)
-                .ToList();
+                .ToListAsync();
 
             int tutorCounter = 0;
             int eleveParentCounter = 0;
@@ -119,7 +124,7 @@ namespace ClasseConcordance
                     continue;
                 }
 
-                var eleveParents = standardContext.GlobalEleveParents.Where(x => x.CodeParent == parent.CodeParent).ToList();
+                var eleveParents = await standardContext.GlobalEleveParents.Where(x => x.CodeParent == parent.CodeParent).ToListAsync();
                 if (eleveParents.Count is <= 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -152,8 +157,8 @@ namespace ClasseConcordance
                         Sexe = parent.Sexe
                     };
 
-                    klasContext.Parents.Add(tutor);
-                    klasContext.SaveChanges();
+                    await klasContext.Parents.AddAsync(tutor);
+                    await klasContext.SaveChangesAsync();
 
                     tutorCounter++;
 
@@ -175,8 +180,8 @@ namespace ClasseConcordance
                             continue;
                         }
 
-                        klasContext.ParentsEleves.Add(tutorStudent);
-                        klasContext.SaveChanges();
+                        await klasContext.ParentsEleves.AddAsync(tutorStudent);
+                        await klasContext.SaveChangesAsync();
 
                         eleveParentCounter++;
                     }
@@ -186,7 +191,7 @@ namespace ClasseConcordance
                     Console.ForegroundColor = ConsoleColor.White;
 
                     Console.WriteLine("envoi des informations de connexions au parent suivant en cours...");
-                    Task.Delay(5000);
+                    ///Task.Delay(5000);
 
                     Console.WriteLine(Environment.NewLine);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -214,7 +219,7 @@ namespace ClasseConcordance
         /// <param name="codeEcole">the klasroom school unique identifier.</param>
         /// <param name="codeClasse">The standard class code key corresponding to the klasroom class where to push students.</param>
         /// <returns> the number of student pushed.</returns>
-        private static int MergeOnKlasroom(List<InscriptionEleve> eleves, string codeEcole, string codeClasse)
+        private static async Task<int> MergeOnKlasroom(List<InscriptionEleve> eleves, string codeEcole, string codeClasse)
         {
             if (string.IsNullOrWhiteSpace(codeEcole))
             {
@@ -228,13 +233,13 @@ namespace ClasseConcordance
 
             using var klasContext = new Klasroom_TestContext(Constants.klasConfingBuilder.Options);
 
-            var activeYear = klasContext.AnneeScolaires.FirstOrDefault(x => x.EstActif == true);
+            var activeYear = await klasContext.AnneeScolaires.FirstOrDefaultAsync(x => x.EstActif == true);
             if (activeYear is null)
             {
                 throw new KeyNotFoundException("Cannot continue the operation because there is not active year configured.");
             }
 
-            var klasEcole = klasContext.Ecoles.FirstOrDefault(x => x.Code == codeEcole);
+            var klasEcole = await klasContext.Ecoles.FirstOrDefaultAsync(x => x.Code == codeEcole);
             if (klasContext is null)
             {
                 throw new KeyNotFoundException($"Cannot find the specified school. please check the given code {codeEcole} and retry.");
@@ -285,9 +290,9 @@ namespace ClasseConcordance
                         EstActif = true
                     };
 
-                    klasContext.Eleves.Add(el);
-                    klasContext.Parcours.Add(parcours);
-                    klasContext.SaveChanges();
+                    await klasContext.Eleves.AddAsync(el);
+                    await klasContext.Parcours.AddAsync(parcours);
+                    await klasContext.SaveChangesAsync();
 
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("Nouvel etudiant pusher");
@@ -373,7 +378,7 @@ namespace ClasseConcordance
             do
             {
                 username = $"student{GenerateId(4)}@{klasEcoleDomain}";
-                password = $"{GenerateId(1, Sets.Alphanumerics)}{GenerateId(3)}";
+                password = $"{GenerateId(1, Sets.Lower)}{GenerateId(3)}";
 
                 studentWithSameIds = context.Eleves.FirstOrDefault(x => x.CodeAuth == username && x.CodePwd == password);
 
@@ -494,7 +499,7 @@ namespace ClasseConcordance
 
             var httpClient = new HttpClient(handler);
             httpClient.BaseAddress = new Uri(string.Format("https://napoche-apis.eteyelo.com/Sms/send-Id-sms", string.Empty));
-            httpClient.Timeout = TimeSpan.FromSeconds(20);
+            //httpClient.Timeout = TimeSpan.FromSeconds(60);
 
             return httpClient;
         }
@@ -577,6 +582,38 @@ namespace ClasseConcordance
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(e);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+
+        /// <summary>
+        /// Create Asp user on klasroom data base.
+        /// </summary>
+        public static async Task CreateKlasUserForNewStudent()
+        {
+            try
+            {
+                var client = ConfigureHttp();
+                client.BaseAddress = new Uri(string.Format(Constants.URL_CREATE_USER, string.Empty));
+                var res = await client.GetAsync(client.BaseAddress);
+                if (res.IsSuccessStatusCode)
+                {
+                    var message = await res.Content.ReadAsStringAsync();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(message);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("failed to create user");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e.Message);
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }

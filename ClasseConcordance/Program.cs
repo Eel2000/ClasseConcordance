@@ -2,11 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Collections;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using ClasseConcordance.Contexts;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ClasseConcordance
 {
@@ -48,13 +50,21 @@ namespace ClasseConcordance
                 else
                 {
                     Console.WriteLine($"[{DateTime.Now}] : Student migration...\n");
-                    Worker.MergeClassesCodes(codes[0], codes[1]);
+                   await Worker.MergeClassesCodes(codes[0], codes[1]);
                     Console.WriteLine($"[{DateTime.Now}] : Process finished...");
                     //Console.ReadLine();
                     await Task.Delay(10000);
                     Console.WriteLine($"[{DateTime.Now}] : Parent migration...\n");
-                    Worker.MergeParent(codes[0], codes[1]);
+                    await Worker.MergeParent(codes[0], codes[1]);
                     Console.WriteLine($"[{DateTime.Now}] : Process finished...");
+
+                    await Task.Delay(1000);
+                    Console.WriteLine($"[{DateTime.Now}] : finalisation...\n");
+                    await Worker.CreateKlasUserForNewStudent();
+                    Console.WriteLine($"[{DateTime.Now}] : Process finished...");
+
+                    Console.WriteLine("Closing...");
+                    await Task.Delay(1000);
                 }
             }
             catch (Exception e)
@@ -81,21 +91,50 @@ namespace ClasseConcordance
                 Console.WriteLine($"[{DateTime.Now}] : Starting Application....");
 
                 await Task.Delay(5000);
+                JObject configfile = null;
+                var path = AppDomain.CurrentDomain.BaseDirectory + "appsettings.json";
+                var isExistFile = File.Exists(path);
+                if (isExistFile)
+                {
+                    configfile = JObject.Parse(File.ReadAllText(path));
+                }
+                else
+                {
+                    var fileDefaultContent = new
+                    {
+                        ConnectionStrings = new
+                        {
+                            Standard = "<PUT_STANDARD_CONNECTION_STRING_HERE>",
+                            Klasroom = "<PUT_KLASROOM_CONNECTION_STRING_HERE>"
+                        },
+                        Schools = "<PUT_SCHOOLS_IDs>"
+                    };
 
-                var builder = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json");
+                    File.WriteAllText(path, JsonConvert.SerializeObject(fileDefaultContent));
+                }
 
-               // var dir = Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}appsettings")
-                
+                //var builder = new ConfigurationBuilder()
+                //    .SetBasePath(Directory.GetCurrentDirectory())
+                //    .AddJsonFile("appsettings.json");
 
-                var configuration = builder.Build();
+                // var dir = Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}appsettings")
+
+
+                //var configuration = builder.Build();
                 Console.WriteLine($"[{DateTime.Now}] : Initializing configurations...");
 
+                if (configfile is null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Failed to initializing configurations...");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Environment.Exit(-5);
+                }
 
-                var schools = configuration.GetSection("Schools").Value;
-                var standarConnectionString = configuration.GetConnectionString("Standard");
-                var klasroomConnectionString = configuration.GetConnectionString("Klasroom");
+
+                var schools = configfile.SelectToken("Schools");
+                var standarConnectionString = configfile.SelectToken("ConnectionStrings").Value<string>("Standard");
+                var klasroomConnectionString = configfile.SelectToken("ConnectionStrings").Value<string>("Klasroom");
 
                 await Task.Delay(5000);
 
@@ -115,7 +154,7 @@ namespace ClasseConcordance
                     Environment.Exit(-1);
                 }
 
-                if (string.IsNullOrWhiteSpace(schools))
+                if (string.IsNullOrWhiteSpace(((string)schools)))
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"[{DateTime.Now}] : Configuration manquante");
@@ -132,7 +171,7 @@ namespace ClasseConcordance
 
                 Console.WriteLine($"[{DateTime.Now}] : Initialization of configurations finished...");
 
-                return schools;
+                return ((string)schools);
             }
             catch (Exception e)
             {
