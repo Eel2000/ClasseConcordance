@@ -377,7 +377,7 @@ namespace ClasseConcordance
 
             do
             {
-                username = $"student{GenerateId(4)}@{klasEcoleDomain}";
+                username = $"student{GenerateId(4)}{klasEcoleDomain}";
                 password = $"{GenerateId(1, Sets.Lower)}{GenerateId(3)}";
 
                 studentWithSameIds = context.Eleves.FirstOrDefault(x => x.CodeAuth == username && x.CodePwd == password);
