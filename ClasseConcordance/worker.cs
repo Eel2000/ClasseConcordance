@@ -190,14 +190,14 @@ namespace ClasseConcordance
                     Console.WriteLine("Nouveau Parent pusher");
                     Console.ForegroundColor = ConsoleColor.White;
 
-                    Console.WriteLine("envoi des informations de connexions au parent suivant en cours...");
+                    //Console.WriteLine("envoi des informations de connexions au parent suivant en cours...");
                     ///Task.Delay(5000);
 
-                    Console.WriteLine(Environment.NewLine);
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    SendCredentialsByStudent(tutor.Code, tutor.CodeEcole, codeEcoleStd);
-                    //Console.WriteLine("informations de connexion envoyer.");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    //Console.WriteLine(Environment.NewLine);
+                    //Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    //SendCredentialsByStudent(tutor.Code, tutor.CodeEcole, codeEcoleStd);
+                    ////Console.WriteLine("informations de connexion envoyer.");
+                    //Console.ForegroundColor = ConsoleColor.White;
 
                 }
                 catch (DbUpdateException e)
